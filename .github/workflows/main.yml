@@ -1,7 +1,5 @@
 name: Deploy to Live Channel
 
-on:
-  push:
 
 on:
   push:
