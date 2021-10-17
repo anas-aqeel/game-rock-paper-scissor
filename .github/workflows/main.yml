@@ -2,7 +2,6 @@ name: Deploy to Live Channel
 
 on:
   push:
-name: GitHub Pages
 
 on:
   push:
