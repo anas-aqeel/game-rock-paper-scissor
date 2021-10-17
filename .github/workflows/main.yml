@@ -2,22 +2,37 @@ name: Deploy to Live Channel
 
 on:
   push:
+name: GitHub Pages
+
+on:
+  push:
     branches:
       - main
-    # Optionally configure to run only for specific files. For example:
-    # paths:
-    # - "website/**"
+  pull_request:
 
 jobs:
-  deploy_live_website:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
-      # Add any build steps here. For example:
-      # - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
         with:
-          repoToken: "${{ secrets.TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          projectId: fir-db-dfef4
-          channelId: live
+          node-version: '14'
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+
+
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.TOKEN }}
+
+
